@@ -3,6 +3,28 @@ import requests
 from bs4 import BeautifulSoup
 app = Flask(__name__)
 
+vatgia_link = 'https://vatgia.com/319/may-anh-so.html'
+def get_url(URL):
+  r = requests.get(URL)
+  soup = BeautifulSoup(r.text, 'html.parser')
+  return soup
+
+def get_vatgia(URL):
+  soup = get_url(URL)
+  l = []
+  blocks = soup.find_all('div', {'class':'block no_picture_thumb'})
+  block = blocks[0]
+  for block in blocks:
+    d = {}
+    name = block.find('div', {'class':'name'})
+    d["name"] = name.a.text
+    price = block.find('div', {'class':'price'})
+    d['price'] = price.text
+    picture = block.find('a', {'class':'picture_link'})
+    d['img'] = picture.img['src']
+    l.append(d)
+  return l
+
 BASE_LINK = "https://tiki.vn/may-anh/c1801?src=c.1801.hamburger_menu_fly_out_banner"
 def load_url(url):
     r = requests.get(url)

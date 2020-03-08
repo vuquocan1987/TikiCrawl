@@ -17,11 +17,11 @@ def get_vatgia(URL):
   for block in blocks:
     d = {}
     name = block.find('div', {'class':'name'})
-    d["name"] = name.a.text
+    d["title"] = name.a.text
     price = block.find('div', {'class':'price'})
     d['price'] = price.text
     picture = block.find('a', {'class':'picture_link'})
-    d['img'] = picture.img['src']
+    d['img_url'] = picture.img['src']
     l.append(d)
   return l
 
@@ -52,9 +52,9 @@ def convert_2d(items):
         items = items[3:]
     return item_lists
 
-@app.route('/sendo')
+@app.route('/vatgia')
 def toShopee():
-    data = parse_html(BASE_LINK)
+    data = get_vatgia(vatgia_link)
     data = convert_2d(data)
     return render_template('sendo.html',data = data[:3])
 
